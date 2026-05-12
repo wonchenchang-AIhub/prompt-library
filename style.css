@@ -338,6 +338,8 @@ body {
 }
 
 /* ── Category colors ─────────────────────────── */
+.cat-tools     { --cat-color: #38bdf8;               --cat-bg: rgba(56,189,248,0.08);  --cat-border: rgba(56,189,248,0.2);  --card-accent: #38bdf8; }
+.cat-preset    { --cat-color: #e879f9;               --cat-bg: rgba(232,121,249,0.08); --cat-border: rgba(232,121,249,0.2); --card-accent: #e879f9; }
 .cat-decision  { --cat-color: var(--cat-decision);  --cat-bg: rgba(79,156,249,0.08);  --cat-border: rgba(79,156,249,0.2);  --card-accent: var(--cat-decision); }
 .cat-proposal  { --cat-color: var(--cat-proposal);  --cat-bg: rgba(167,139,250,0.08); --cat-border: rgba(167,139,250,0.2); --card-accent: var(--cat-proposal); }
 .cat-comms     { --cat-color: var(--cat-comms);     --cat-bg: rgba(244,114,182,0.08); --cat-border: rgba(244,114,182,0.2); --card-accent: var(--cat-comms); }

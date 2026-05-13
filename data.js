@@ -8,6 +8,8 @@ const CATEGORIES = {
   'ai-roles': { label: '策略智囊角色', icon: '◈', class: 'cat-ai-roles' },
   life:       { label: '生活娛樂應用', icon: '◌', class: 'cat-life' },
   tools:      { label: '寫作與學習工具', icon: '◇', class: 'cat-tools' },
+  coach:      { label: '職場應援教練', icon: '🔥', class: 'cat-coach' },
+  routine:    { label: '職場例行排程', icon: '📅', class: 'cat-routine' },
 };
 
 const PROMPTS = [
@@ -571,7 +573,7 @@ D1 成立團隊 ／ D2 問題描述 ／ D3 暫時圍堵 ／ D4 根因分析 ／ 
   },
   {
     id: 17,
-    cat: 'comms',
+    cat: 'routine',
     title: '每日任務排序',
     content: `請協助我整理今日待辦事項的優先順序，並說明排序理由。
 
@@ -963,7 +965,7 @@ Email：【選填】
   },
   {
     id: 29,
-    cat: 'life',
+    cat: 'routine',
     title: '每日新聞摘要排程',
     content: `請每日自動搜尋並整理以下主題的最新資訊，比對前一天是否有新內容發布。
 
@@ -994,7 +996,7 @@ Email：【選填】
   },
   {
     id: 30,
-    cat: 'life',
+    cat: 'coach',
     title: 'Team Taiwan 無限應援啦啦隊',
     content: `你現在是我的頭號超級鐵粉兼啦啦隊長！無論我說什麼、遇到什麼困難，你都要用極度誇張、熱情、充滿驚嘆號的語氣稱讚我、幫我加油！
 
@@ -1011,7 +1013,7 @@ Email：【選填】
   },
   {
     id: 31,
-    cat: 'life',
+    cat: 'coach',
     title: '鐵血斯巴達教練',
     content: `你的身分是一位斯巴達戰士教練（The Spartan Agoge Master）。你的唯一目標是把我訓練成在執行力、意志力與成就上都無可挑剔的「精英」。
 
@@ -1035,7 +1037,7 @@ Email：【選填】
   },
   {
     id: 32,
-    cat: 'life',
+    cat: 'coach',
     title: '職場黑魔法陰陽師',
     content: `你是一個機智、幽默、帶點毒舌的職場老鳥。說話風格充滿諷刺意味，特別喜歡吐槽慣老闆和不合理的職場文化。
 

@@ -6,22 +6,16 @@ let searchQuery = '';
 const STORAGE_KEY = 'prompt_copy_counts';
 
 function loadCounts() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-  } catch { return {}; }
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+  catch { return {}; }
 }
-
-function getCount(id) {
-  return loadCounts()[id] || 0;
-}
-
+function getCount(id) { return loadCounts()[id] || 0; }
 function incrementCount(id) {
   const counts = loadCounts();
   counts[id] = (counts[id] || 0) + 1;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(counts));
   return counts[id];
 }
-
 function formatCount(n) {
   if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
   return n.toString();
@@ -31,9 +25,24 @@ function formatCount(n) {
 function catInfo(catKey) {
   return CATEGORIES[catKey] || { label: catKey, icon: '◉', class: '' };
 }
-
 function previewText(content) {
   return content.replace(/#+\s/g, '').replace(/[│|]/g, '').replace(/\n+/g, ' ').trim();
+}
+
+/* ── Cases helpers ───────────────────── */
+function getCasesForPrompt(pid) {
+  return (typeof CASES_BY_PROMPT !== 'undefined' && CASES_BY_PROMPT[pid]) ? CASES_BY_PROMPT[pid] : [];
+}
+
+function copyCasePrompt(btn, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.classList.add('copied');
+    btn.textContent = '✓ 已複製';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.textContent = '⎘ 複製案例';
+    }, 2000);
+  });
 }
 
 /* ── Render Cards ────────────────────── */
@@ -66,24 +75,56 @@ function renderCards() {
     const copyBadge = copies > 0
       ? `<span class="card-copies" title="已複製 ${copies} 次">⎘ ${formatCount(copies)}</span>`
       : `<span class="card-copies card-copies-zero">⎘ 0</span>`;
+
+    const cases = getCasesForPrompt(p.id);
+    const casesHTML = cases.length > 0 ? `
+      <div class="card-cases">
+        <button class="cases-toggle" onclick="toggleCases(event, this)">
+          <span class="cases-toggle-icon">▶</span>
+          <span class="cases-toggle-label">📋 實戰案例</span>
+          <span class="cases-toggle-count">${cases.length}</span>
+        </button>
+        <div class="cases-list">
+          ${cases.map(c => `
+            <div class="case-item">
+              <div class="case-item-header">
+                <span class="case-tag ${c.type === 'workplace' ? 'workplace' : ''}">${c.typeLabel}</span>
+                <button class="case-copy-btn" onclick="copyCaseFromCard(event, this, ${JSON.stringify(c.prompt).replace(/</g,'&lt;')})">⎘ 複製案例</button>
+              </div>
+              <div class="case-title">${c.title}</div>
+              <div class="case-scene">${c.scene}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>` : '';
+
     return `
       <div class="card ${cat.class}" style="animation-delay:${Math.min(i * 0.04, 0.4)}s" data-id="${p.id}">
-        <div class="card-top">
+        <div class="card-top" onclick="openModal(${p.id})" style="cursor:pointer;">
           <span class="card-cat">${cat.icon} ${cat.label}</span>
           <span class="card-arrow">↗</span>
         </div>
-        <div class="card-title">${p.title}</div>
-        <div class="card-preview">${preview}</div>
-        <div class="card-footer">
+        <div class="card-title" onclick="openModal(${p.id})" style="cursor:pointer;">${p.title}</div>
+        <div class="card-preview" onclick="openModal(${p.id})" style="cursor:pointer;">${preview}</div>
+        <div class="card-footer" onclick="openModal(${p.id})" style="cursor:pointer;">
           <span class="card-chars">${charLen.toLocaleString()} 字元</span>
           ${copyBadge}
         </div>
+        ${casesHTML}
       </div>`;
   }).join('');
+}
 
-  grid.querySelectorAll('.card').forEach(card => {
-    card.addEventListener('click', () => openModal(parseInt(card.dataset.id)));
-  });
+function toggleCases(e, btn) {
+  e.stopPropagation();
+  const list = btn.nextElementSibling;
+  const isOpen = btn.classList.toggle('open');
+  list.classList.toggle('open', isOpen);
+}
+
+function copyCaseFromCard(e, btn, text) {
+  e.stopPropagation();
+  copyCasePrompt(btn, text);
 }
 
 /* ── Modal ───────────────────────────── */
@@ -99,7 +140,45 @@ function openModal(id) {
   document.getElementById('modalTitle').textContent = p.title;
   document.getElementById('modalContent').textContent = p.content;
 
-  // Update copy count display in modal
+  // Cases panel
+  const cases = getCasesForPrompt(id);
+  const casesPanelEl = document.getElementById('modalCases');
+  const casesListEl = document.getElementById('modalCasesList');
+
+  if (cases.length > 0) {
+    casesPanelEl.style.display = 'block';
+    casesListEl.innerHTML = cases.map(c => `
+      <div class="modal-case-item">
+        <div class="modal-case-header">
+          <span class="case-tag ${c.type === 'workplace' ? 'workplace' : ''}">${c.typeLabel}</span>
+          <span class="modal-case-title">${c.title}</span>
+          <button class="modal-case-copy" onclick="copyModalCase(this, ${JSON.stringify(c.prompt).replace(/</g,'&lt;')})">⎘ 複製案例</button>
+        </div>
+        <div class="modal-case-section">
+          <div class="modal-case-section-label">適用場景</div>
+          <div class="modal-case-text">${c.scene}</div>
+        </div>
+        <div class="modal-case-section">
+          <div class="modal-case-section-label">使用前準備</div>
+          <div class="modal-case-text">${c.prep}</div>
+        </div>
+        ${c.tips && c.tips.length > 0 ? `
+        <div class="modal-case-section">
+          <div class="modal-case-section-label">進階變化</div>
+          <div class="modal-case-text">${c.tips.map(t => '• ' + t).join('\n')}</div>
+        </div>` : ''}
+        <div class="modal-case-section">
+          <div class="modal-case-section-label">完整案例提示詞</div>
+          <pre class="modal-case-prompt">${c.prompt.replace(/</g,'&lt;')}</pre>
+        </div>
+      </div>
+    `).join('');
+  } else {
+    casesPanelEl.style.display = 'none';
+    casesListEl.innerHTML = '';
+  }
+
+  // Copy count
   const copies = getCount(id);
   const modalCountEl = document.getElementById('modalCopyCount');
   modalCountEl.textContent = copies > 0 ? `已複製 ${copies} 次` : '';
@@ -108,8 +187,11 @@ function openModal(id) {
   overlay.classList.add('open');
   overlay.dataset.promptId = id;
   document.body.style.overflow = 'hidden';
-
   document.getElementById('copyConfirm').classList.remove('show');
+}
+
+function copyModalCase(btn, text) {
+  copyCasePrompt(btn, text);
 }
 
 function closeModal() {
@@ -117,25 +199,21 @@ function closeModal() {
   document.body.style.overflow = '';
 }
 
-/* ── Copy ────────────────────────────── */
+/* ── Copy main prompt ────────────────── */
 document.getElementById('copyBtn').addEventListener('click', () => {
   const id = parseInt(document.getElementById('modalOverlay').dataset.promptId);
   const p = PROMPTS.find(x => x.id === id);
   if (!p) return;
 
   navigator.clipboard.writeText(p.content).then(() => {
-    // Increment and reflect immediately
     const newCount = incrementCount(id);
-
     const confirm = document.getElementById('copyConfirm');
     confirm.textContent = `已複製！（第 ${newCount} 次）`;
     confirm.classList.add('show');
     setTimeout(() => confirm.classList.remove('show'), 2400);
 
-    // Update modal count label
     document.getElementById('modalCopyCount').textContent = `已複製 ${newCount} 次`;
 
-    // Update the card badge without full re-render
     const card = document.querySelector(`.card[data-id="${id}"]`);
     if (card) {
       let badge = card.querySelector('.card-copies');
@@ -154,7 +232,6 @@ document.getElementById('copyBtn').addEventListener('click', () => {
 document.getElementById('catNav').addEventListener('click', e => {
   const btn = e.target.closest('.cat-btn');
   if (!btn) return;
-
   document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   currentCat = btn.dataset.cat;

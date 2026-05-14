@@ -256,10 +256,15 @@ body {
 
 .card-footer {
   display: flex; align-items: center;
-  justify-content: space-between;
+  justify-content: space-between; gap: 8px;
   padding-top: 10px;
   border-top: 1px solid var(--border);
   margin-top: 2px;
+  flex-wrap: wrap;
+}
+
+.card-footer-actions {
+  display: flex; align-items: center; gap: 6px; flex-shrink: 0;
 }
 
 .card-chars {
@@ -604,4 +609,82 @@ body {
   .logo-sub { display: none; }
   .modal { max-height: 92vh; }
   .modal-header, .modal-body, .modal-footer, .modal-cases { padding-left: 16px; padding-right: 16px; }
+}
+
+/* ── 卡片：複製提示詞按鈕（藍色）── */
+.card-copy-prompt-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--accent);
+  border: none; border-radius: 6px;
+  padding: 4px 10px;
+  color: #fff;
+  font-family: var(--font-sans); font-size: 10px; font-weight: 600;
+  cursor: pointer; white-space: nowrap;
+  transition: all var(--transition);
+  box-shadow: 0 1px 4px rgba(37,99,235,0.25);
+}
+.card-copy-prompt-btn:hover {
+  background: var(--accent-dark);
+  box-shadow: 0 2px 8px rgba(37,99,235,0.35);
+  transform: translateY(-1px);
+}
+.card-copy-prompt-btn.copied-prompt {
+  background: #059669;
+  box-shadow: 0 1px 4px rgba(5,150,105,0.3);
+}
+
+/* ── 案例：複製案例按鈕（綠色）── */
+.case-copy-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: #ecfdf5;
+  border: 1.5px solid #059669;
+  border-radius: 6px; padding: 3px 9px;
+  color: #059669;
+  font-family: var(--font-sans); font-size: 10px; font-weight: 600;
+  cursor: pointer; transition: all var(--transition); white-space: nowrap;
+}
+.case-copy-btn:hover {
+  background: #059669; color: #fff;
+}
+.case-copy-btn.copied-case {
+  background: #059669; color: #fff; border-color: #059669;
+}
+
+/* ── Modal footer：複製提示詞按鈕（藍色，已有，確保狀態） ── */
+.copy-btn.copied-prompt {
+  background: #059669;
+  box-shadow: 0 2px 8px rgba(5,150,105,0.3);
+}
+
+/* ── Modal 案例面板：複製案例按鈕（綠色）── */
+.modal-case-copy {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: #ecfdf5;
+  border: 1.5px solid #059669;
+  border-radius: 6px; padding: 5px 12px;
+  color: #059669;
+  font-family: var(--font-sans); font-size: 11px; font-weight: 600;
+  cursor: pointer; transition: all var(--transition);
+  white-space: nowrap;
+}
+.modal-case-copy:hover {
+  background: #059669; color: #fff;
+}
+.modal-case-copy.copied-case {
+  background: #059669; color: #fff; border-color: #059669;
+}
+
+/* ── 按鈕視覺分隔線（在案例區與主內容之間）── */
+.modal-cases {
+  border-top: 2px solid var(--border);
+  padding: 16px 24px 0; background: var(--surface-2);
+}
+.modal-cases-title {
+  font-size: 11px; font-family: var(--font-mono); font-weight: 700;
+  color: var(--text-dim); letter-spacing: 0.08em; margin-bottom: 12px;
+  text-transform: uppercase;
+  display: flex; align-items: center; gap: 6px;
+}
+.modal-cases-title::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
 }

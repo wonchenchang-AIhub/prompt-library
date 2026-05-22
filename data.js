@@ -1,17 +1,16 @@
 
 const CATEGORIES = {
-  preset:     { label: '個人化預設', icon: '◆', class: 'cat-preset' },
-  decision:   { label: '決策與分析', icon: '⬡', class: 'cat-decision' },
-  proposal:   { label: '企劃與提案', icon: '⬢', class: 'cat-proposal' },
-  comms:      { label: '職場溝通與文書', icon: '◎', class: 'cat-comms' },
-  writing:    { label: '文稿品質提升', icon: '◫', class: 'cat-writing' },
-  'ai-roles': { label: '策略智囊角色', icon: '◈', class: 'cat-ai-roles' },
-  coach:      { label: '職場應援教練', icon: '🔥', class: 'cat-coach' },
+  preset:     { label: '個人化預設',   icon: '◆',  class: 'cat-preset'   },
+  decision:   { label: '決策與分析',   icon: '⬡',  class: 'cat-decision' },
+  proposal:   { label: '企劃與提案',   icon: '⬢',  class: 'cat-proposal' },
+  comms:      { label: '職場溝通與文書', icon: '◎', class: 'cat-comms'    },
+  writing:    { label: '文稿品質提升', icon: '◫',  class: 'cat-writing'  },
+  'ai-roles': { label: '策略智囊角色', icon: '◈',  class: 'cat-ai-roles' },
+  routine:    { label: '職場例行排程', icon: '📅', class: 'cat-routine'  },
   research:   { label: '研究分析精進', icon: '🔬', class: 'cat-research' },
-  life:       { label: '生活娛樂應用', icon: '◌', class: 'cat-life' },
-  routine:    { label: '職場例行排程', icon: '📅', class: 'cat-routine' },
-  research:   { label: '研究分析框架', icon: '🔬', class: 'cat-research' },
-  tools:      { label: '寫作創作工具', icon: '◇', class: 'cat-tools' },
+  coach:      { label: '職場應援教練', icon: '🔥', class: 'cat-coach'    },
+  life:       { label: '生活娛樂應用', icon: '◌',  class: 'cat-life'     },
+  tools:      { label: '寫作創作工具', icon: '◇',  class: 'cat-tools'    },
 };
 
 const PROMPTS = [
